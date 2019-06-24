@@ -28,18 +28,26 @@ class ParseSportsBet(object):
                     name_race = ''.join(page_with_race.xpath(
                         "//h2[contains(@data-automation-id, 'racecard-header-title')]//text()")).replace(
                         ' ', '_').replace('/', '_')
-
+                    with open(name_race + '.csv', 'a') as race:
+                        writer = csv.writer(race)
+                        writer.writerow(['Horses', '1st', '2nd', '3rd', 'starts', 'win', 'place', 'roi'])
                     for horses in page_with_race.xpath(
-                                "//div[contains(@data-automation-id, 'racecard-outcome-name')]/span[1]//text()"):
+                            "//div[contains(@data-automation-id, 'racecard-outcome-name')]/span[1]//text()"):
                         with open(FILE_NAME, 'r') as allData, open(name_race + '.csv', 'a') as race:
                             reader = csv.reader(allData)
                             next(reader, None)
                             writer = csv.writer(race)
                             horse = ''.join(filter(str.isalpha, horses))
+                            horses_for_write_file = []
                             for row in reader:
                                 if horse.lower() in row[0].lower():
-                                    writer.writerow(row)
-                                    print(row)
+                                    horses_for_write_file.append(row)
+                            if horses_for_write_file:
+                                for horse_ in horses_for_write_file:
+                                    writer.writerow(horse_)
+                                    print(horse_)
+                            else:
+                                writer.writerow([horse.lower() + 'does not exist in the main file'])
 
 
 if __name__ == '__main__':
