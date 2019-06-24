@@ -24,10 +24,14 @@ class ParseSportsBet(object):
                 for url in items.xpath("td[contains(@class, 'notResultedEventCell_f1kqmput')]//a//@href"):
                     self.driver.get('https://www.sportsbet.com.au' + url)
                     page_with_race = etree.HTML(self.driver.page_source)
-
-                    name_race = ''.join(page_with_race.xpath(
-                        "//h2[contains(@data-automation-id, 'racecard-header-title')]//text()")).replace(
-                        ' ', '_').replace('/', '_')
+                    try:
+                        name_race = ''.join(page_with_race.xpath(
+                            "//ul[contains(@class, 'crumbList_f1f1ygnm')]//li//text()"))[6:].replace(
+                            ">", '_').replace(' ', '')
+                    except IndexError:
+                        name_race = ''.join(page_with_race.xpath(
+                            "//h2[contains(@data-automation-id, 'racecard-header-title')]//text()")).replace(
+                            ' ', '_').replace('/', '_')
                     with open(name_race + '.csv', 'a') as race:
                         writer = csv.writer(race)
                         writer.writerow(['Horses', '1st', '2nd', '3rd', 'starts', 'win', 'place', 'roi'])
