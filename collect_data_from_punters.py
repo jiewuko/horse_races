@@ -18,7 +18,7 @@ class ParsePunters(object):
     @staticmethod
     def create_file():
         if not os.path.isfile(os.getcwd() + FILE_NAME):
-            with open(FILE_NAME, 'w') as csvFile:
+            with open(FILE_NAME, 'w', newline='') as csvFile:
                 writer = csv.writer(csvFile)
                 writer.writerow(['Horses', '1st', '2nd', '3rd', 'starts', 'win', 'place', 'roi'])
 
@@ -29,7 +29,7 @@ class ParsePunters(object):
 
     def collect_data_from_page(self, page_source):
         page_data = etree.HTML(page_source)
-        with open(FILE_NAME, 'a') as csvFile:
+        with open(FILE_NAME, 'a', newline='') as csvFile:
             writer = csv.writer(csvFile)
             data_for_write = []
             for data in page_data.xpath("//table[contains(@class, 'stat-table')]/tbody//tr"):
